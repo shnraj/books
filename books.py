@@ -30,16 +30,13 @@ def get_books():
     request_url = "http://api.nytimes.com/svc/books/v3/lists/combined-print-fiction.json?api-key=" + KEY
 
     content = requests.get(request_url)._content
-    books = json.loads(content)["results"]["books"]
+    books_results = json.loads(content)["results"]["books"]
 
-    book_names = {}
+    books = [Book(book["title"], book["author"], book["amazon_product_url"])
+             for book in books_results]
+
     for book in books:
-        book_names[book["title"]] = book["amazon_product_url"]
-
-    print "Book names:"
-
-    for name, url in book_names.iteritems():
-        r = requests.get(url)
+        r = requests.get(book.amazon_url)
 
         soup = BeautifulSoup(r.text, "lxml")
         product = soup.find(id="productDetailsTable")
@@ -47,9 +44,23 @@ def get_books():
         if product:
             for line in product.get_text().split():
                 if line.lower() == 'pages' and tmp.isdigit():
-                    print tmp, 'pages - ', name.title()
+                    book.pages = tmp
                 else:
                     tmp = line
+
+    print "Books:"
+    for book in books:
+        if book.pages:
+            print book.pages, ' - ', book.name, book.author
+
+
+class Book():
+
+    def __init__(self, name, author, amazon_url, pages=None):
+        self.name = name
+        self.author = author
+        self.amazon_url = amazon_url
+        self.pages = pages
 
 
 if __name__ == "__main__":
