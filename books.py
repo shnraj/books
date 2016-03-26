@@ -45,6 +45,7 @@ def get_books():
         get_pages(book)
 
     print "Books:"
+    books.sort()
     for book in books:
         if book.pages:
             print book.pages, ' - ', book.name, book.author
@@ -59,13 +60,14 @@ def get_pages(book):
         wordList = re.sub('[^\w]', ' ',  pages_result).split()
         tmp = ''
         for word in wordList:
-            if word == "pages" or word == "p.":
+            if word == "pages" or word == "p":
                 book.pages = int(tmp)
             tmp = word
+    else:
+        get_amazon_pages(book)
 
 
-def get_amazon_pages(books):
-    for book in books:
+def get_amazon_pages(book):
         r = requests.get(book.amazon_url)
 
         soup = BeautifulSoup(r.text, "lxml")
@@ -81,13 +83,16 @@ def get_amazon_pages(books):
 
 class Book():
 
-    def __init__(self, name, author, isbn, amazon_url, pages=None, summary=None):
+    def __init__(self, name, author, isbn, amazon_url, pages=0, summary=None):
         self.name = name
         self.author = author
         self.isbn = isbn
         self.amazon_url = amazon_url
         self.pages = pages
         self.summary = summary
+
+    def __lt__(self, other):
+        return self.pages < other.pages
 
 
 if __name__ == "__main__":
