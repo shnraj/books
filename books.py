@@ -1,10 +1,12 @@
+import re
 import requests
 import json
 
 from bs4 import BeautifulSoup
 
 
-KEY = "a2812dc7a11a8746e78e803c2baccb46:5:74720908"
+GOODREADS_KEY = "a2812dc7a11a8746e78e803c2baccb46:5:74720908"
+ISBNDB_KEY = "VMBECAZ6"
 
 
 def main():
@@ -14,7 +16,7 @@ def main():
 
 
 def get_list_names():
-    request_url = "http://api.nytimes.com/svc/books/v3/lists/names.json?api-key=" + KEY
+    request_url = "http://api.nytimes.com/svc/books/v3/lists/names.json?api-key=" + GOODREADS_KEY
 
     content = requests.get(request_url)._content
     results = json.loads(content)["results"]
@@ -27,14 +29,42 @@ def get_list_names():
 
 
 def get_books():
-    request_url = "http://api.nytimes.com/svc/books/v3/lists/combined-print-fiction.json?api-key=" + KEY
+    request_url = "http://api.nytimes.com/svc/books/v3/lists/combined-print-fiction.json?api-key=" + GOODREADS_KEY
 
     content = requests.get(request_url)._content
     books_results = json.loads(content)["results"]["books"]
 
-    books = [Book(book["title"], book["author"], book["amazon_product_url"])
+    books = [Book(
+             book["title"],
+             book["author"],
+             book["primary_isbn13"],
+             book["amazon_product_url"])
              for book in books_results]
 
+    for book in books:
+        get_pages(book)
+
+    print "Books:"
+    for book in books:
+        if book.pages:
+            print book.pages, ' - ', book.name, book.author
+
+
+def get_pages(book):
+    request_url = "http://isbndb.com/api/v2/json/" + ISBNDB_KEY + "/book/" + book.isbn
+
+    content = json.loads(requests.get(request_url)._content)
+    if "data" in content:
+        pages_result = content["data"][0]["physical_description_text"]
+        wordList = re.sub('[^\w]', ' ',  pages_result).split()
+        tmp = ''
+        for word in wordList:
+            if word == "pages" or word == "p.":
+                book.pages = int(tmp)
+            tmp = word
+
+
+def get_amazon_pages(books):
     for book in books:
         r = requests.get(book.amazon_url)
 
@@ -48,19 +78,16 @@ def get_books():
                 else:
                     tmp = line
 
-    print "Books:"
-    for book in books:
-        if book.pages:
-            print book.pages, ' - ', book.name, book.author
-
 
 class Book():
 
-    def __init__(self, name, author, amazon_url, pages=None):
+    def __init__(self, name, author, isbn, amazon_url, pages=None, summary=None):
         self.name = name
         self.author = author
+        self.isbn = isbn
         self.amazon_url = amazon_url
         self.pages = pages
+        self.summary = summary
 
 
 if __name__ == "__main__":
