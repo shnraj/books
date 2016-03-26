@@ -1,12 +1,9 @@
+import config  # file that contains my API tokens
 import re
 import requests
 import json
 
 from bs4 import BeautifulSoup
-
-
-GOODREADS_KEY = "a2812dc7a11a8746e78e803c2baccb46:5:74720908"
-ISBNDB_KEY = "VMBECAZ6"
 
 
 def main():
@@ -16,7 +13,7 @@ def main():
 
 
 def get_list_names():
-    request_url = "http://api.nytimes.com/svc/books/v3/lists/names.json?api-key=" + GOODREADS_KEY
+    request_url = "http://api.nytimes.com/svc/books/v3/lists/names.json?api-key=" + config.NYT_KEY
 
     content = requests.get(request_url)._content
     results = json.loads(content)["results"]
@@ -29,7 +26,7 @@ def get_list_names():
 
 
 def get_books():
-    request_url = "http://api.nytimes.com/svc/books/v3/lists/combined-print-fiction.json?api-key=" + GOODREADS_KEY
+    request_url = "http://api.nytimes.com/svc/books/v3/lists/combined-print-fiction.json?api-key=" + config.NYT_KEY
 
     content = requests.get(request_url)._content
     books_results = json.loads(content)["results"]["books"]
@@ -48,11 +45,11 @@ def get_books():
     books.sort()
     for book in books:
         if book.pages:
-            print book.pages, ' - ', book.name, book.author
+            print book.pages, ' - ', book.name, '-', book.author
 
 
 def get_pages(book):
-    request_url = "http://isbndb.com/api/v2/json/" + ISBNDB_KEY + "/book/" + book.isbn
+    request_url = "http://isbndb.com/api/v2/json/" + config.ISBNDB_KEY + "/book/" + book.isbn
 
     content = json.loads(requests.get(request_url)._content)
     if "data" in content:
