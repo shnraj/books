@@ -25,8 +25,9 @@ def get_list_names():
     return list_names
 
 
+# get new york times bestseller list of books
 def get_books():
-    request_url = "http://api.nytimes.com/svc/books/v3/lists/combined-print-fiction.json?api-key=" + config.NYT_KEY
+    request_url = "http://api.nytimes.com/svc/books/v3/lists/hardcover-fiction.json?api-key=" + config.NYT_KEY
 
     content = requests.get(request_url)._content
     books_results = json.loads(content)["results"]["books"]
@@ -48,6 +49,7 @@ def get_books():
             print book.pages, ' - ', book.name, '-', book.author
 
 
+# get book page number from isbndb
 def get_pages(book):
     request_url = "http://isbndb.com/api/v2/json/" + config.ISBNDB_KEY + "/book/" + book.isbn
 
@@ -57,13 +59,14 @@ def get_pages(book):
         wordList = re.sub('[^\w]', ' ',  pages_result).split()
         tmp = ''
         for word in wordList:
-            if word == "pages" or word == "p":
+            if word == "pages" or word == "p" and tmp.isdigit():
                 book.pages = int(tmp)
             tmp = word
     else:
         get_amazon_pages(book)
 
 
+# scrape amazon to get book page number
 def get_amazon_pages(book):
         r = requests.get(book.amazon_url)
 
@@ -73,7 +76,7 @@ def get_amazon_pages(book):
         if product:
             for line in product.get_text().split():
                 if line.lower() == 'pages' and tmp.isdigit():
-                    book.pages = tmp
+                    book.pages = int(tmp)
                 else:
                     tmp = line
 
