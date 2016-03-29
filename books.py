@@ -38,14 +38,18 @@ def get_books():
              book["author"],
              book["primary_isbn13"],
              book["amazon_product_url"])
-             for book in books_results]
+             for book in books_results
+             if not book_in_shelve(book["primary_isbn13"])]
 
     for book in books:
         book.pages = get_page_count(book)
+        if book.pages:
+            add_book_to_shelve(book)
 
     print "Books:"
-    books.sort()
-    for book in books:
+    books_in_shelve = get_all_books_from_shelve()
+    books_in_shelve.sort()
+    for book in books_in_shelve:
         if book.pages:
             print book.pages, ' - ', book.name, '-', book.author
 
@@ -101,6 +105,47 @@ class Book():
 
     def __lt__(self, other):
         return self.pages < other.pages
+
+
+# if book does not exist in shelve and has a page number, add to shelve
+def add_book_to_shelve(book):
+    s = shelve.open('books')
+    try:
+        if book.pages and book.isbn not in s:
+            s[book.isbn] = book
+    finally:
+        s.close()
+
+
+# get book from shelve given isbn number
+def get_book_from_shelve(isbn):
+    s = shelve.open('books')
+    try:
+        if isbn in s:
+            book = s[isbn]
+    finally:
+        s.close()
+    return book
+
+
+# get book from shelve given isbn number
+def get_all_books_from_shelve():
+    s = shelve.open('books')
+    try:
+        books = s.values()
+    finally:
+        s.close()
+    return books
+
+
+# get book from shelve given isbn number
+def book_in_shelve(isbn):
+    s = shelve.open('books')
+    try:
+        book_in_shelve = isbn in s
+    finally:
+        s.close()
+    return book_in_shelve
 
 
 if __name__ == "__main__":
