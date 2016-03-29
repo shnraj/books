@@ -1,7 +1,8 @@
 import config  # file that contains my API tokens
+import json
 import re
 import requests
-import json
+import shelve  # simple persistent storage option
 
 from bs4 import BeautifulSoup
 
@@ -40,7 +41,7 @@ def get_books():
              for book in books_results]
 
     for book in books:
-        get_pages(book)
+        book.pages = get_page_count(book)
 
     print "Books:"
     books.sort()
@@ -50,7 +51,15 @@ def get_books():
 
 
 # get book page number from isbndb
-def get_pages(book):
+def get_page_count(book):
+    page_count = get_ibdndb_pages(book)
+    if not page_count:
+        page_count = get_amazon_pages(book)
+    return page_count
+
+
+# get page number from isbndb
+def get_ibdndb_pages(book):
     request_url = "http://isbndb.com/api/v2/json/" + config.ISBNDB_KEY + "/book/" + book.isbn
 
     content = json.loads(requests.get(request_url)._content)
@@ -60,25 +69,24 @@ def get_pages(book):
         tmp = ''
         for word in wordList:
             if word == "pages" or word == "p" and tmp.isdigit():
-                book.pages = int(tmp)
+                return int(tmp)
             tmp = word
-    else:
-        get_amazon_pages(book)
 
 
 # scrape amazon to get book page number
 def get_amazon_pages(book):
-        r = requests.get(book.amazon_url)
+    r = requests.get(book.amazon_url)
 
-        soup = BeautifulSoup(r.text, "lxml")
-        product = soup.find(id="productDetailsTable")
-        tmp = ''
-        if product:
-            for line in product.get_text().split():
-                if line.lower() == 'pages' and tmp.isdigit():
-                    book.pages = int(tmp)
-                else:
-                    tmp = line
+    soup = BeautifulSoup(r.text, "lxml")
+    product = soup.find(id="productDetailsTable")
+    tmp = ''
+    if product:
+        for line in product.get_text().split():
+            if line.lower() == 'pages' and tmp.isdigit():
+                book.pages = int(tmp)
+                return int(tmp)
+            else:
+                tmp = line
 
 
 class Book():
