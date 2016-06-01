@@ -53,7 +53,7 @@ def get_books():
     books_string = ''
     for book in books_in_shelve:
         if book.pages:
-            books_string += str(book.pages) + ' - ' + book.name + ' - ' + book.author + '   '
+            books_string += str(book.pages) + ' - ' + book.name + ' - ' + book.author + '<br/>'
     return str(books_string)
 
 
