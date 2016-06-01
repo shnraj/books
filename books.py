@@ -5,12 +5,14 @@ import requests
 import shelve  # simple persistent storage option
 
 from bs4 import BeautifulSoup
+from flask import Flask
+app = Flask(__name__)
+app.config['DEBUG'] = True
 
 
+@app.route("/")
 def main():
-    # print "List names:"
-    # print '\n'.join(get_list_names())
-    get_books()
+    return get_books()
 
 
 def get_list_names():
@@ -46,12 +48,13 @@ def get_books():
         if book.pages:
             add_book_to_shelve(book)
 
-    print "Books:"
     books_in_shelve = get_all_books_from_shelve()
     books_in_shelve.sort()
+    books_string = ''
     for book in books_in_shelve:
         if book.pages:
-            print book.pages, ' - ', book.name, '-', book.author
+            books_string += str(book.pages) + ' - ' + book.name + ' - ' + book.author + '   '
+    return str(books_string)
 
 
 # get book page number from isbndb
@@ -149,5 +152,4 @@ def book_in_shelve(isbn):
 
 
 if __name__ == "__main__":
-    # execute only if run as a script
-    main()
+    app.run()
