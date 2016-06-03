@@ -55,7 +55,7 @@ def get_books():
     books_string = ''
     for book in books_in_shelve:
         if book.pages:
-            books_string += str(book.pages) + ' - ' + book.name + ' - ' + book.author + ' - ' + book.image + ' - ' + book.summary + '<br/>'
+            books_string += '<img src="' + book.image +'" width="170"/>' + '  ' + str(book.pages) + ' - ' + book.name + ' - ' + book.author + ' - ' + book.summary + '<br/>'
     return books_string
 
 
