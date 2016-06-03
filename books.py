@@ -39,7 +39,9 @@ def get_books():
              book["title"],
              book["author"],
              book["primary_isbn13"],
-             book["amazon_product_url"])
+             book["amazon_product_url"],
+             book["book_image"],
+             book["description"])
              for book in books_results
              if not book_in_shelve(book["primary_isbn13"])]
 
@@ -53,8 +55,8 @@ def get_books():
     books_string = ''
     for book in books_in_shelve:
         if book.pages:
-            books_string += str(book.pages) + ' - ' + book.name + ' - ' + book.author + '<br/>'
-    return str(books_string)
+            books_string += str(book.pages) + ' - ' + book.name + ' - ' + book.author + ' - ' + book.image + ' - ' + book.summary + '<br/>'
+    return books_string
 
 
 # get book page number from isbndb
@@ -98,12 +100,13 @@ def get_amazon_pages(book):
 
 class Book():
 
-    def __init__(self, name, author, isbn, amazon_url, pages=0, summary=None):
+    def __init__(self, name, author, isbn, amazon_url, image, summary=None, pages=0):
         self.name = name
         self.author = author
         self.isbn = isbn
         self.amazon_url = amazon_url
         self.pages = pages
+        self.image = image
         self.summary = summary
 
     def __lt__(self, other):
