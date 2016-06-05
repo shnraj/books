@@ -1,0 +1,20 @@
+<head>
+    <script src="jquery-1.12.4.min.js"></script>
+    <script>
+        $.ajax({
+          url: "http://api.nytimes.com/svc/books/v3/lists/names.json",
+          data: {
+            "api-key": NYT_KEY  // Hidden API key
+          },
+          success: function( result ) {
+            console.log(result);
+            $( "#books" ).html( "<strong>" + result + "</strong>" );
+          }
+        });
+    </script>
+</head>
+
+<body>
+    <div class="books">
+    </div>
+</body>
