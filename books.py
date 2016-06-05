@@ -6,13 +6,15 @@ import shelve  # simple persistent storage option
 
 from bs4 import BeautifulSoup
 from flask import Flask
+from flask import render_template
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
 
 @app.route("/")
 def main():
-    return get_books()
+    # return get_books()
+    return render_template('books.html', books=all_books_str())
 
 
 def get_list_names():
@@ -50,13 +52,7 @@ def get_books():
         if book.pages:
             add_book_to_shelve(book)
 
-    books_in_shelve = get_all_books_from_shelve()
-    books_in_shelve.sort()
-    books_string = ''
-    for book in books_in_shelve:
-        if book.pages:
-            books_string += '<img src="' + book.image +'" width="170"/>' + '  ' + str(book.pages) + ' - ' + book.name + ' - ' + book.author + ' - ' + book.summary + '<br/>'
-    return books_string
+    return all_books_str()
 
 
 # get book page number from isbndb
@@ -134,7 +130,7 @@ def get_book_from_shelve(isbn):
     return book
 
 
-# get book from shelve given isbn number
+# get all books from shelve - returns book objects
 def get_all_books_from_shelve():
     s = shelve.open('books')
     try:
@@ -143,8 +139,18 @@ def get_all_books_from_shelve():
         s.close()
     return books
 
+# return string form of all books in shelve
+def all_books_str():
+    books_in_shelve = get_all_books_from_shelve()
+    books_in_shelve.sort()
+    books_string = ''
+    for book in books_in_shelve:
+        if book.pages:
+            books_string += '<img src="' + book.image +'" width="170"/>' + '  ' + str(book.pages) + ' - ' + book.name + ' - ' + book.author + ' - ' + book.summary + '<br/>'
+    return books_string
 
-# get book from shelve given isbn number
+
+# return if book exists in shelve given isbn number
 def book_in_shelve(isbn):
     s = shelve.open('books')
     try:
