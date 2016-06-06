@@ -5,8 +5,8 @@ import requests
 import shelve  # simple persistent storage option
 
 from bs4 import BeautifulSoup
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template
+from flask import json as j
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
@@ -14,7 +14,8 @@ app.config['DEBUG'] = True
 @app.route("/")
 def main():
     # return get_books()
-    return render_template('books.html', books=all_books_str())
+    books_json = j.dumps([book.__dict__ for book in get_all_books_from_shelve()])
+    return render_template('books.html', books=books_json)
 
 
 def get_list_names():
@@ -135,14 +136,15 @@ def get_all_books_from_shelve():
     s = shelve.open('books')
     try:
         books = s.values()
+        books.sort()
     finally:
         s.close()
     return books
 
+
 # return string form of all books in shelve
 def all_books_str():
     books_in_shelve = get_all_books_from_shelve()
-    books_in_shelve.sort()
     books_string = ''
     for book in books_in_shelve:
         if book.pages:
