@@ -18,3 +18,24 @@ body {
     text-align: center;
 }
 
+.pages {
+    font-size: 80%;
+    font-style: italic;
+}
+
+a {
+  transition: color .4s;
+  color: #265C83;
+}
+
+a:link,
+a:visited { color: #265C83; }
+a:hover   { color: #66CDAA	; }
+a:active  {
+  transition: color .3s;
+  color: #265C83;
+}
+
+a {
+    text-decoration: none;
+}
