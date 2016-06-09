@@ -16,6 +16,7 @@ body {
 .book {
     margin: 10px;
     text-align: center;
+    width: 135px;
 }
 
 .pages {

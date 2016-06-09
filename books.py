@@ -13,8 +13,8 @@ app.config['DEBUG'] = True
 
 @app.route("/")
 def main():
-    books = get_books()
-    # list_name = 'hardcover-fiction'
+    list_name = 'hardcover-nonfiction'
+    books = get_books(list_name)
     # books = [book.__dict__ for book in get_all_books_from_shelve(list_name)]
     return render_template('books.html', books=books)
     # return get_list_names()
@@ -34,8 +34,7 @@ def get_list_names():
 
 
 # get new york times bestseller list of books
-def get_books():
-    list_name = 'hardcover-fiction'
+def get_books(list_name):
     request_url = "http://api.nytimes.com/svc/books/v3/lists/" + list_name + ".json?api-key=" + config.NYT_KEY
 
     content = requests.get(request_url)._content
