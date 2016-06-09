@@ -2,15 +2,18 @@
 <head>
     <title>Books</title>
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='books.css') }}"/>
+    <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,300,200,100,500,600,700,800' rel='stylesheet' type='text/css'>
 </head>
 <body>
     <div class="header">
         Books
     </div>
-    <div>
+    <div class="books">
         {% for book in books %}
-            <div>
-                {{ book.name }}
+            <div class="book">
+                <img src="{{ book.image }}" width="120"/>
+                <a href="{{ book.amazon_url }}"> {{ book.name }}</a> </br>
+                {{ book.pages }}
             </div>
         {% endfor %}
     </div>

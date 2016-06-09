@@ -13,8 +13,8 @@ app.config['DEBUG'] = True
 
 @app.route("/")
 def main():
-    # return get_books()
-    books = [book.__dict__ for book in get_all_books_from_shelve()]
+    books = get_books()
+    # books = [book.__dict__ for book in get_all_books_from_shelve()]
     return render_template('books.html', books=books)
 
 
@@ -53,7 +53,7 @@ def get_books():
         if book.pages:
             add_book_to_shelve(book)
 
-    return all_books_str()
+    return [book.__dict__ for book in get_all_books_from_shelve()]
 
 
 # get book page number from isbndb
