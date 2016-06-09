@@ -6,7 +6,7 @@ import shelve  # simple persistent storage option
 
 from bs4 import BeautifulSoup
 from flask import Flask, render_template
-from flask import json as j
+
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
@@ -14,8 +14,10 @@ app.config['DEBUG'] = True
 @app.route("/")
 def main():
     books = get_books()
-    # books = [book.__dict__ for book in get_all_books_from_shelve()]
+    # list_name = 'hardcover-fiction'
+    # books = [book.__dict__ for book in get_all_books_from_shelve(list_name)]
     return render_template('books.html', books=books)
+    # return get_list_names()
 
 
 def get_list_names():
@@ -33,7 +35,8 @@ def get_list_names():
 
 # get new york times bestseller list of books
 def get_books():
-    request_url = "http://api.nytimes.com/svc/books/v3/lists/hardcover-fiction.json?api-key=" + config.NYT_KEY
+    list_name = 'hardcover-fiction'
+    request_url = "http://api.nytimes.com/svc/books/v3/lists/" + list_name + ".json?api-key=" + config.NYT_KEY
 
     content = requests.get(request_url)._content
     books_results = json.loads(content)["results"]["books"]
@@ -46,14 +49,14 @@ def get_books():
              book["book_image"],
              book["description"])
              for book in books_results
-             if not book_in_shelve(book["primary_isbn13"])]
+             if not book_in_shelve(book["primary_isbn13"], list_name)]
 
     for book in books:
         book.pages = get_page_count(book)
         if book.pages:
-            add_book_to_shelve(book)
+            add_book_to_shelve(book, list_name)
 
-    return [book.__dict__ for book in get_all_books_from_shelve()]
+    return [book.__dict__ for book in get_all_books_from_shelve(list_name)]
 
 
 # get book page number from isbndb
@@ -111,8 +114,8 @@ class Book():
 
 
 # if book does not exist in shelve and has a page number, add to shelve
-def add_book_to_shelve(book):
-    s = shelve.open('books')
+def add_book_to_shelve(book, db_name):
+    s = shelve.open(db_name)
     try:
         if book.pages and book.isbn not in s:
             s[book.isbn] = book
@@ -121,8 +124,8 @@ def add_book_to_shelve(book):
 
 
 # get book from shelve given isbn number
-def get_book_from_shelve(isbn):
-    s = shelve.open('books')
+def get_book_from_shelve(isbn, db_name):
+    s = shelve.open(db_name)
     try:
         if isbn in s:
             book = s[isbn]
@@ -132,8 +135,8 @@ def get_book_from_shelve(isbn):
 
 
 # get all books from shelve - returns book objects
-def get_all_books_from_shelve():
-    s = shelve.open('books')
+def get_all_books_from_shelve(db_name):
+    s = shelve.open(db_name)
     try:
         books = s.values()
         books.sort()
@@ -143,8 +146,8 @@ def get_all_books_from_shelve():
 
 
 # return string form of all books in shelve
-def all_books_str():
-    books_in_shelve = get_all_books_from_shelve()
+def all_books_str(db_name):
+    books_in_shelve = get_all_books_from_shelve(db_name)
     books_string = ''
     for book in books_in_shelve:
         if book.pages:
@@ -153,8 +156,8 @@ def all_books_str():
 
 
 # return if book exists in shelve given isbn number
-def book_in_shelve(isbn):
-    s = shelve.open('books')
+def book_in_shelve(isbn, db_name):
+    s = shelve.open(db_name)
     try:
         book_in_shelve = isbn in s
     finally:
