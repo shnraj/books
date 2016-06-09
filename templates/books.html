@@ -4,7 +4,14 @@
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='books.css') }}"/>
 </head>
 <body>
+    <div class="header">
+        Books
+    </div>
     <div>
-        {{ books }}
+        {% for book in books %}
+            <div>
+                {{ book.name }}
+            </div>
+        {% endfor %}
     </div>
 </body>

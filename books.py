@@ -14,8 +14,8 @@ app.config['DEBUG'] = True
 @app.route("/")
 def main():
     # return get_books()
-    books_json = j.dumps([book.__dict__ for book in get_all_books_from_shelve()])
-    return render_template('books.html', books=books_json)
+    books = [book.__dict__ for book in get_all_books_from_shelve()]
+    return render_template('books.html', books=books)
 
 
 def get_list_names():
