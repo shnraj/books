@@ -13,11 +13,10 @@ app.config['DEBUG'] = True
 
 @app.route("/")
 def main():
-    list_name = 'hardcover-nonfiction'
-    books = get_books(list_name)
-    # books = [book.__dict__ for book in get_all_books_from_shelve(list_name)]
-    return render_template('books.html', books=books)
-    # return get_list_names()
+    fiction_books = get_books('hardcover-fiction')
+    non_fiction_books = get_books('hardcover-nonfiction')
+
+    return render_template('books.html', fiction_books=fiction_books, nonfiction_books=non_fiction_books)
 
 
 def get_list_names():
