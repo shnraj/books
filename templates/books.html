@@ -1,24 +1,29 @@
 <!doctype html>
 <head>
     <title>Books</title>
-    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='books.css') }}"/>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/books.css') }}"/>
+    <script src="{{ url_for('static', filename='js/books.js') }}"></script>
     <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,300,200,100,500,600,700,800' rel='stylesheet' type='text/css'>
 </head>
 <body>
     <div class="header">
         Books
     </div>
+
     <div class="books">
+        <div class="genre"> FICTION </div>
         {% for book in fiction_books %}
             <div class="book">
                 <img src="{{ book.image }}" width="120"/>
                 <a href="{{ book.amazon_url }}" target="_blank"> {{ book.name }}</a>
                 <div class="pages"> {{ book.pages }} pages </div>
+                <div class="popup" style="display: none"> {{ book.description }} </div>
             </div>
         {% endfor %}
     </div>
 
     <div class="books">
+        <div class="genre"> NONFICTION </div>
         {% for book in nonfiction_books %}
             <div class="book">
                 <img src="{{ book.image }}" width="120"/>
