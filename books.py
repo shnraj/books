@@ -69,8 +69,16 @@ def get_page_count(book):
 def get_ibdndb_pages(book):
     request_url = "http://isbndb.com/api/v2/json/" + config.ISBNDB_KEY + "/book/" + book.isbn
 
-    content = json.loads(requests.get(request_url)._content)
-    if "data" in content:
+    response = requests.get(request_url)._content
+    content = {}
+    try:
+        content = json.loads(response)
+    except ValueError, e:
+        pass # invalid json
+    else:
+        pass # valid json
+
+    if content and "data" in content:
         pages_result = content["data"][0]["physical_description_text"]
         wordList = re.sub('[^\w]', ' ',  pages_result).split()
         tmp = ''
