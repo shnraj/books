@@ -2,13 +2,13 @@ import config  # file that contains my API tokens
 import json
 import re
 import requests
-import shelve  # simple persistent storage option
+from pickleshare import *  # simple persistent storage option
 
 from bs4 import BeautifulSoup
 from flask import Flask, render_template
 
 app = Flask(__name__)
-app.config['DEBUG'] = True
+# app.config['DEBUG'] = True
 
 
 @app.route("/")
@@ -47,14 +47,14 @@ def get_books(list_name):
              book["book_image"],
              book["description"])
              for book in books_results
-             if not book_in_shelve(book["primary_isbn13"], list_name)]
+             if not book_in_db(book["primary_isbn13"], list_name)]
 
     for book in books:
         book.pages = get_page_count(book)
         if book.pages:
-            add_book_to_shelve(book, list_name)
+            add_book_to_db(book, list_name)
 
-    return [book.__dict__ for book in get_all_books_from_shelve(list_name)]
+    return [book.__dict__ for book in get_all_books_from_db(list_name)]
 
 
 # get book page number from isbndb
@@ -74,9 +74,9 @@ def get_ibdndb_pages(book):
     try:
         content = json.loads(response)
     except ValueError, e:
-        pass # invalid json
+        pass  # invalid json
     else:
-        pass # valid json
+        pass  # valid json
 
     if content and "data" in content:
         pages_result = content["data"][0]["physical_description_text"]
@@ -119,56 +119,53 @@ class Book():
         return self.pages < other.pages
 
 
-# if book does not exist in shelve and has a page number, add to shelve
-def add_book_to_shelve(book, db_name):
-    s = shelve.open(db_name)
+# if book does not exist in db and has a page number, add to db
+def add_book_to_db(book, db_name):
+    db = PickleShareDB('~/' + db_name)
     try:
-        if book.pages and book.isbn not in s:
-            s[book.isbn] = book
+        if book.pages and book.isbn not in db:
+            db[book.isbn] = book
     finally:
-        s.close()
+        return
 
 
-# get book from shelve given isbn number
-def get_book_from_shelve(isbn, db_name):
-    s = shelve.open(db_name)
+# get book from db given isbn number
+def get_book_from_db(isbn, db_name):
+    db = PickleShareDB('~/' + db_name)
     try:
-        if isbn in s:
-            book = s[isbn]
+        if isbn in db:
+            book = db[isbn]
     finally:
-        s.close()
-    return book
+        return book
 
 
-# get all books from shelve - returns book objects
-def get_all_books_from_shelve(db_name):
-    s = shelve.open(db_name)
+# get all books from db - returns book objects
+def get_all_books_from_db(db_name):
+    db = PickleShareDB('~/' + db_name)
     try:
-        books = s.values()
+        books = db.values()
         books.sort()
     finally:
-        s.close()
-    return books
+        return books
 
 
-# return string form of all books in shelve
+# return string form of all books in db
 def all_books_str(db_name):
-    books_in_shelve = get_all_books_from_shelve(db_name)
+    books_in_db = get_all_books_from_db(db_name)
     books_string = ''
-    for book in books_in_shelve:
+    for book in books_in_db:
         if book.pages:
             books_string += '<img src="' + book.image +'" width="170"/>' + '  ' + str(book.pages) + ' - ' + book.name + ' - ' + book.author + ' - ' + book.summary + '<br/>'
     return books_string
 
 
-# return if book exists in shelve given isbn number
-def book_in_shelve(isbn, db_name):
-    s = shelve.open(db_name)
+# return if book exists in db given isbn number
+def book_in_db(isbn, db_name):
+    db = PickleShareDB('~/' + db_name)
     try:
-        book_in_shelve = isbn in s
+        book_in_db = isbn in db
     finally:
-        s.close()
-    return book_in_shelve
+        return book_in_db
 
 
 if __name__ == "__main__":
