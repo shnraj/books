@@ -1,9 +1,10 @@
 var started = false;
+var timeVar;
 
 function start() {
     if (!started) {
         started = true;
-        setInterval(countTimer, 1000);
+        timeVar = setInterval(countTimer, 1000);
         var totalSeconds = 0;
         function countTimer() {
             ++totalSeconds;
@@ -14,4 +15,9 @@ function start() {
             document.getElementById("timer").innerHTML = minute + ":" + seconds;
         };
     }
+}
+
+function stop() {
+    started = false;
+    clearInterval(timeVar);
 }
