@@ -14,7 +14,7 @@ function start() {
             var minute = Math.floor((totalSeconds - hour*3600)/60);
             var seconds = totalSeconds - (hour*3600 + minute*60);
 
-            document.getElementById("timer").innerHTML = minute + ":" + seconds;
+            document.getElementById("timer").innerHTML = pad(minute) + ":" + pad(seconds);
         };
     }
 }
@@ -22,4 +22,8 @@ function start() {
 function stop() {
     started = false;
     clearInterval(timeVar);
+}
+
+function pad(n) {
+    return (n < 10) ? ("0" + n) : n;
 }
