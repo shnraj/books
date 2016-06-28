@@ -3,6 +3,8 @@ var timeVar;
 
 function start() {
     if (!started) {
+        var textBlock = document.getElementById('textBlock');
+        textBlock.className = "";
         started = true;
         timeVar = setInterval(countTimer, 1000);
         var totalSeconds = 0;

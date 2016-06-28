@@ -53,8 +53,11 @@ a {
     width: 800px;
 }
 
-.blur {
+#text {
     padding: 20px;
+}
+
+.blur {
     background: rgb(225,225,225); /* for IE */
     background: rgba(30,30,30,0.1);
     -webkit-filter: blur(4px);
