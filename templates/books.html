@@ -18,6 +18,7 @@
                 <a href="{{ book.amazon_url }}" target="_blank"> {{ book.name }}</a>
                 <div class="pages"> {{ book.pages }} pages </div>
                 <div class="popup" style="display: none"> {{ book.description }} </div>
+                <div id="timeToRead{{ book.isbn|string }}"> </div>
             </div>
         {% endfor %}
     </div>
@@ -29,6 +30,7 @@
                 <img src="{{ book.image }}" width="120"/>
                 <a href="{{ book.amazon_url }}" target="_blank"> {{ book.name }}</a>
                 <div class="pages"> {{ book.pages }} pages </div>
+                <div id="timeToRead{{ book.isbn|string }}"> </div>
             </div>
         {% endfor %}
     </div>
@@ -50,6 +52,6 @@
 
             <p>Sorrow came - a gentle sorrow - but not at all in the shape of any disagreeable consciousness. Miss Taylor married. It was Miss Taylor's loss which first brought grief. It was on the wedding-day of this beloved friend that Emma first sat in mournful thought of any continuance. The wedding over, and the bride-people gone, her father and herself were left to dine together, with no prospect of a third to cheer a long evening. Her father composed himself to sleep after dinner, as usual, and she had then only to sit and think of what she had lost.</p>
         </div>
-        <button onclick="stop()">Stop</button>
+        <button onclick=stop()>Stop</button>
     </div>
 </body>

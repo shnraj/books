@@ -1,6 +1,13 @@
 var started = false;
 var timeVar;
 var totalSeconds = 0;
+var fiction_books;
+var nonfiction_books;
+
+function setup(fiction_books, nonfiction_books) {
+    fiction_books = fiction_books;
+    nonfiction_books = nonfiction_books;
+}
 
 function start() {
     if (!started) {
@@ -20,9 +27,14 @@ function start() {
 }
 
 function stop() {
+    fiction_books = [{'isbn': '9780804141260', 'name': 'VINEGAR GIRL', 'author': 'Anne Tyler', 'image': 'https://s1.nyt.com/du/books/images/9780804141260.jpg', 'amazon_url': 'http://www.amazon.com/Vinegar-Girl-Novel-Hogarth-Shakespeare/dp/0804141266?tag=thenewyorktim-20', 'pages': 240}, {'isbn': '9780812996494', 'name': 'A HERO OF FRANCE', 'author': 'Alan Furst', 'image': 'https://s1.nyt.com/du/books/images/9780812996500.jpg', 'amazon_url': 'http://www.amazon.com/Hero-France-Novel-Alan-Furst-ebook/dp/B018CHH2A8?tag=thenewyorktim-20', 'pages': 256}]
     started = false;
     clearInterval(timeVar);
     document.getElementById("wpm").innerHTML = 'Words per minute: ' + wpm(343, totalSeconds);
+    for (var i=0; i < fiction_books.length; i++) {
+        className = "timeToRead" + fiction_books[i].isbn
+        document.getElementById(className).innerHTML = fiction_books[i].pages * 225 * wpm(343, totalSeconds);
+    }
     totalSeconds = 0;
 }
 

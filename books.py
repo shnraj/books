@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 from flask import Flask, render_template
 
 app = Flask(__name__)
-# app.config['DEBUG'] = True
+app.config['DEBUG'] = True
 
 
 @app.route("/")
@@ -32,6 +32,7 @@ def get_list_names():
     return list_names
 
 
+@app.route("/get_books")
 # get new york times bestseller list of books
 def get_books(list_name):
     request_url = "http://api.nytimes.com/svc/books/v3/lists/" + list_name + ".json?api-key=" + config.NYT_KEY
