@@ -32,8 +32,11 @@ function stop() {
     clearInterval(timeVar);
     document.getElementById("wpm").innerHTML = 'Words per minute: ' + wpm(343, totalSeconds);
     for (var i=0; i < fiction_books.length; i++) {
-        className = "timeToRead" + fiction_books[i].isbn
-        document.getElementById(className).innerHTML = fiction_books[i].pages * 225 * wpm(343, totalSeconds);
+        className = "timeToRead" + fiction_books[i].isbn;
+        var total_min = fiction_books[i].pages * 225 / wpm(343, totalSeconds);
+        var hours = Math.floor((total_min)/60);
+        var min =  Math.floor(total_min - (hours * 60));
+        document.getElementById(className).innerHTML = hours + ' hr ' + min + ' min';
     }
     totalSeconds = 0;
 }
@@ -43,7 +46,7 @@ function pad(n) {
 }
 
 function wpm(words, time_in_sec) {
-    var wps = words/time_in_sec;
-    var wpm = wps/60
+    var min = time_in_sec/60;
+    var wpm = words/min;
     return Math.round(wpm * 100) / 100
 }
