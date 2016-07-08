@@ -4,6 +4,10 @@
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/books.css') }}"/>
     <script src="{{ url_for('static', filename='js/books.js') }}"></script>
     <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,300,200,100,500,600,700,800' rel='stylesheet' type='text/css'>
+    <script>
+            var fiction_books = {{ fiction_books|tojson }}
+            var nonfiction_books = {{ nonfiction_books|tojson }}
+    </script>
 </head>
 <body>
     <div class="header">
