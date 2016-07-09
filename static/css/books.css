@@ -30,6 +30,10 @@ a {
     margin: 15px 0;
 }
 
+.books div {
+    padding: 1px;
+}
+
 .genre {
     margin-top: 140px;
     transform: rotate(270deg);
@@ -46,6 +50,10 @@ a {
 .pages {
     font-size: 80%;
     font-style: italic;
+}
+
+.timeToRead {
+    font-size: 80%;
 }
 
 .wpmSection {

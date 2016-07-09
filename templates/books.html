@@ -22,7 +22,7 @@
                 <a href="{{ book.amazon_url }}" target="_blank"> {{ book.name }}</a>
                 <div class="pages"> {{ book.pages }} pages </div>
                 <div class="popup" style="display: none"> {{ book.description }} </div>
-                <div id="timeToRead{{ book.isbn|string }}"> </div>
+                <div id="timeToRead{{ book.isbn|string }}" class="timeToRead"> </div>
             </div>
         {% endfor %}
     </div>
@@ -34,7 +34,7 @@
                 <img src="{{ book.image }}" width="120"/>
                 <a href="{{ book.amazon_url }}" target="_blank"> {{ book.name }}</a>
                 <div class="pages"> {{ book.pages }} pages </div>
-                <div id="timeToRead{{ book.isbn|string }}"> </div>
+                <div id="timeToRead{{ book.isbn|string }}" class="timeToRead"> </div>
             </div>
         {% endfor %}
     </div>
