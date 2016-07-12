@@ -45,11 +45,13 @@ function wpm(words, time_in_sec) {
 }
 
 function update_book_times() {
+    var personal_wpm = wpm(343, totalSeconds)
+    document.cookie = "wpm=" + personal_wpm.toString();
     var lists = [fiction_books, nonfiction_books];
     for (var j=0; j < lists.length; j++) {
         for (var i=0; i < lists[j].length; i++) {
             className = "timeToRead" + lists[j][i].isbn;
-            var total_min = lists[j][i].pages * 225 / wpm(343, totalSeconds);
+            var total_min = lists[j][i].pages * 225 / personal_wpm;
             var hours = Math.floor((total_min)/60);
             var min =  Math.floor(total_min - (hours * 60));
             document.getElementById(className).innerHTML = hours + ' hr ' + min + ' min';
