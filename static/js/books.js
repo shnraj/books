@@ -4,9 +4,10 @@ var totalSeconds = 0;
 var fiction_books;
 var nonfiction_books;
 
-function setup(fiction_books, nonfiction_books) {
-    fiction_books = fiction_books;
-    nonfiction_books = nonfiction_books;
+function setup() {
+    var cookie_str = document.cookie;
+    var wpm = cookie_str.substring(cookie_str.indexOf('=') + 1);
+    update_book_times(wpm);
 }
 
 function start() {
@@ -29,8 +30,10 @@ function start() {
 function stop() {
     started = false;
     clearInterval(timeVar);
-    document.getElementById("wpm").innerHTML = 'Words per minute: ' + wpm(343, totalSeconds);
-    update_book_times()
+    var personal_wpm = wpm(343, totalSeconds)
+    document.getElementById("wpm").innerHTML = 'Words per minute: ' + personal_wpm;
+    document.cookie = "wpm=" + personal_wpm.toString();
+    update_book_times(personal_wpm)
     totalSeconds = 0;
 }
 
@@ -44,9 +47,7 @@ function wpm(words, time_in_sec) {
     return Math.round(wpm * 100) / 100
 }
 
-function update_book_times() {
-    var personal_wpm = wpm(343, totalSeconds)
-    document.cookie = "wpm=" + personal_wpm.toString();
+function update_book_times(personal_wpm) {
     var lists = [fiction_books, nonfiction_books];
     for (var j=0; j < lists.length; j++) {
         for (var i=0; i < lists[j].length; i++) {
