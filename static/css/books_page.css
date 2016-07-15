@@ -1,0 +1,58 @@
+body {
+    margin: 15px;
+    padding: 0;
+    font-family: 'Work Sans', sans-serif;
+}
+
+.header {
+    font-size: 200%;
+}
+
+a {
+  transition: color .4s;
+  color: #265C83;
+}
+
+a:link,
+a:visited { color: #265C83; }
+a:hover   { color: #66CDAA	; }
+a:active  {
+  transition: color .3s;
+  color: #265C83;
+}
+
+a {
+    text-decoration: none;
+}
+
+.books {
+    margin: 15px 0;
+    width: 450px;
+}
+
+.books div {
+    padding: 1px;
+}
+
+.book {
+    display: flex;
+    height: 170px;
+    margin: 10px;
+}
+
+div.info {
+    padding-left: 10px;
+}
+
+.pages {
+    font-size: 80%;
+    font-style: italic;
+}
+
+.summary {
+    font-size: 90%;
+}
+
+.timeToRead {
+    font-size: 80%;
+}
