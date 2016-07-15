@@ -1,0 +1,28 @@
+<!doctype html>
+<head>
+    <title>Books</title>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/books.css') }}"/>
+    <script src="{{ url_for('static', filename='js/books_page.js') }}"></script>
+    <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,300,200,100,500,600,700,800' rel='stylesheet' type='text/css'>
+    <script>
+            var books = {{ books|tojson }}
+    </script>
+</head>
+<body onload="setup();">
+    <div class="header">
+        {{ genre }}
+    </div>
+
+    <div class="books">
+        {% for book in books %}
+            <div class="book">
+                <img src="{{ book.image }}" width="120"/>
+                <a href="{{ book.amazon_url }}" target="_blank"> {{ book.name }}</a>
+                <div class="pages"> {{ book.pages }} pages </div>
+                <div class="popup" style="display: none"> {{ book.description }} </div>
+                <div id="timeToRead{{ book.isbn|string }}"> </div>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+

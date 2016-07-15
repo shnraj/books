@@ -19,6 +19,18 @@ def main():
     return render_template('books.html', fiction_books=fiction_books, nonfiction_books=non_fiction_books)
 
 
+@app.route("/fiction")
+def fiction_books():
+    books = get_books('hardcover-fiction')
+    return render_template('books_page.html', genre="Fiction", books=books)
+
+
+@app.route("/nonfiction")
+def nonfiction_books():
+    books = get_books('hardcover-nonfiction')
+    return render_template('books_page.html',  genre="Non-fiction", books=books)
+
+
 def get_list_names():
     request_url = "http://api.nytimes.com/svc/books/v3/lists/names.json?api-key=" + config.NYT_KEY
 
