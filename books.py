@@ -49,23 +49,26 @@ def get_list_names():
 def get_books(list_name):
     request_url = "http://api.nytimes.com/svc/books/v3/lists/" + list_name + ".json?api-key=" + config.NYT_KEY
 
-    content = requests.get(request_url)._content
-    books_results = json.loads(content)["results"]["books"]
+    content = requests.get(request_url).content
+    try:
+        books_results = json.loads(content)["results"]["books"]
 
-    books = [Book(
-             book["title"],
-             book["author"],
-             book["primary_isbn13"],
-             book["amazon_product_url"],
-             book["book_image"],
-             book["description"])
-             for book in books_results
-             if not book_in_db(book["primary_isbn13"], list_name)]
+        books = [Book(
+                 book["title"],
+                 book["author"],
+                 book["primary_isbn13"],
+                 book["amazon_product_url"],
+                 book["book_image"],
+                 book["description"])
+                 for book in books_results
+                 if not book_in_db(book["primary_isbn13"], list_name)]
 
-    for book in books:
-        book.pages = get_page_count(book)
-        if book.pages:
-            add_book_to_db(book, list_name)
+        for book in books:
+            book.pages = get_page_count(book)
+            if book.pages:
+                add_book_to_db(book, list_name)
+    except:
+        pass
 
     return [book.__dict__ for book in get_all_books_from_db(list_name)]
 

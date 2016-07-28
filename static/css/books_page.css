@@ -26,18 +26,18 @@ a {
 }
 
 .books {
+    height: 700px;
     margin: 15px 0;
+    overflow: scroll;
     width: 450px;
 }
 
-.books div {
-    padding: 1px;
-}
-
 .book {
+    background-color: #ededed;
     display: flex;
     height: 170px;
     margin: 10px;
+    padding: 10px;
 }
 
 div.info {
