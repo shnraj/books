@@ -25,6 +25,10 @@ a {
     text-decoration: none;
 }
 
+.content {
+    display: flex;
+}
+
 .books {
     height: 700px;
     margin: 15px 0;
