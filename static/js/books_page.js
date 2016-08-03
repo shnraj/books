@@ -15,3 +15,12 @@ function update_book_times(personal_wpm) {
         document.getElementById(className).innerHTML = hours + ' hr ' + min + ' min';
     }
 }
+
+function show_detailed_view(book_isbn) {
+    var isbn_to_book_mapping = {}
+    for (var i=0; i < books.length; i++) {
+        isbn_to_book_mapping[books[i].isbn] = books[i]
+    }
+    document.getElementById('detailed_image').src = isbn_to_book_mapping[book_isbn].image;
+}
+

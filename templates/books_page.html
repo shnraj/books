@@ -15,7 +15,7 @@
     <div class="content">
         <div class="books">
             {% for book in books %}
-                <div class="book">
+            <div class="book" onclick="show_detailed_view({{ book.isbn }})">
                     <img src="{{ book.image }}" width="120"/>
                     <div class="info">
                         <a href="{{ book.amazon_url }}" target="_blank"> {{ book.name }}</a>
@@ -29,6 +29,7 @@
             {% endfor %}
         </div>
         <div class="detailedView">
+            <img id="detailed_image" width="120"/>
         </div>
     </div>
 </body>
