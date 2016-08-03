@@ -23,13 +23,18 @@
                         <div class="timeToRead" id="timeToRead{{ book.isbn|string }}"> </div>
                         </br>
                         <div class="summary"> {{ book.summary }} </div>
-                        <div class="popup" style="display: none"> {{ book.description }} </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
         <div class="detailedView">
-            <img id="detailed_image" width="120"/>
+            <img id="detailed_image" width="190"/>
+            </br>
+            <a id="detailed_name" target="_blank"> </a>
+            <div id="detailed_author" class="author"> </div>
+            <div id="detailed_pages" class="pages"> </div>
+            </br>
+            <div id="detailed_summary" class="summary"> </div>
         </div>
     </div>
 </body>

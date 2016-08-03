@@ -60,3 +60,7 @@ div.info {
 .timeToRead {
     font-size: 80%;
 }
+
+.detailedView {
+    margin: 16px 30px;
+}

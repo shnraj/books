@@ -22,5 +22,10 @@ function show_detailed_view(book_isbn) {
         isbn_to_book_mapping[books[i].isbn] = books[i]
     }
     document.getElementById('detailed_image').src = isbn_to_book_mapping[book_isbn].image;
+    document.getElementById('detailed_name').innerHTML = isbn_to_book_mapping[book_isbn].name;
+    document.getElementById('detailed_name').href = isbn_to_book_mapping[book_isbn].amazon_url;
+    document.getElementById('detailed_pages').innerHTML = isbn_to_book_mapping[book_isbn].pages + " pages";
+    document.getElementById('detailed_author').innerHTML = "By " + isbn_to_book_mapping[book_isbn].author;
+    document.getElementById('detailed_summary').innerHTML = isbn_to_book_mapping[book_isbn].summary;
 }
 
